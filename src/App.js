@@ -2,15 +2,15 @@ import React, {
   Component
 } from 'react';
 import './style.css';
-import Messages from './MessageList.js';
+import MessageList from './MessageList.js';
 
 let sampleData = [{
-    user: 'testuser1',
-    message: 'hello!'
+    username: 'testuser1',
+    text: 'hello!'
   },
   {
-    user: 'testuser2',
-    message: 'hey?'
+    username: 'testuser2',
+    text: 'hey?'
   }
 ];
 
@@ -19,7 +19,7 @@ class App extends Component {
     super(props);
     this.state = {
       messages: []
-    }
+    };
   }
 
   componentDidMount() {
@@ -27,10 +27,7 @@ class App extends Component {
   }
 
   render() {
-    return ( 
-    <div>
-      <MessageList messages = {this.props.messages}/> </div>
-    );
+    return <MessageList messages = {this.state.messages}/>;
   }
 }
 

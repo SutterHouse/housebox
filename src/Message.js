@@ -6,7 +6,7 @@ import './style.css';
 const Message = (props) => (
   <div>
     <div className='message-container'>
-      Message container
+      { props.message.username }: { props.message.text }
     </div>
   </div>
 )
