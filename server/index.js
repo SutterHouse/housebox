@@ -24,11 +24,11 @@ const wss = new WebSocket.Server({ server: server });
 //mount express app on http server
 server.on('request', app);
 
-wss.on('connection', () => {
-    wss.on('message', message => {
+wss.on('connection', (ws) => {
+    ws.on('message', message => {
         console.log('received message: ', message);
     });
-    wss.send('connected to websocket server');
+    ws.send('your websocket server is here');
 })
 
 var port = process.env.PORT || 3001;

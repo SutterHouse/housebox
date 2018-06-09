@@ -23,6 +23,7 @@ class App extends Component {
 
   componentDidMount() {
     this.fetchPrevMessages();
+    this.connectToWebSocket();
   }
 
   fetchPrevMessages() {
@@ -31,6 +32,20 @@ class App extends Component {
       console.log(result.data);
       this.setState({ messages: result.data });
     })
+  }
+
+  connectToWebSocket() {
+    var wsURL = 'ws://' + window.location.host;
+    var ws = new WebSocket(wsURL);
+
+    ws.onopen = () => {
+      ws.onmessage = (e) => {
+        console.log(e.data);
+      }
+  
+      ws.send('client reporting for duty!');
+    };
+    
   }
 
   render() {
