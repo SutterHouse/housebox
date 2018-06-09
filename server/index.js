@@ -1,22 +1,9 @@
 const messageDB = require('../database/message.js');
 
 
-//WEBSOCKET SERVER
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ port: 3001 });
-
-wss.on('connection', () => {
-    wss.on('message', message => {
-        console.log('received message: ', message);
-    });
-})
-
-
-//HTTP SERVER
+//EXPRESS APP
 const express = require('express');
 const app = express();
-
-app.get('/', express.static('build'));
 
 app.get('/messages', (req, res) => {
     messageDB.find({}).then(result => {
@@ -24,6 +11,25 @@ app.get('/messages', (req, res) => {
     });
 })
 
+app.use(express.static('build'));
 
-var port = 3000;
-app.listen(port, () => console.log('listening on port', port));
+
+//WEBSOCKET APP
+const server = require('http').createServer();
+
+//mount websocket app on http server
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ server: server });
+
+//mount express app on http server
+server.on('request', app);
+
+wss.on('connection', () => {
+    wss.on('message', message => {
+        console.log('received message: ', message);
+    });
+    wss.send('connected to websocket server');
+})
+
+var port = process.env.PORT || 3001;
+server.listen(port, () => console.log('listening on port', port));

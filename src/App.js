@@ -1,8 +1,7 @@
-import React, {
-  Component
-} from 'react';
+import React, { Component } from 'react';
 import './style.css';
 import MessageList from './MessageList.js';
+import axios from 'axios';
 
 let sampleData = [{
     username: 'testuser1',
@@ -23,7 +22,15 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.setState({messages: sampleData});
+    this.fetchPrevMessages();
+  }
+
+  fetchPrevMessages() {
+    var url = window.location.origin + '/messages';
+    axios.get(url).then(result => {
+      console.log(result.data);
+      this.setState({ messages: result.data });
+    })
   }
 
   render() {
