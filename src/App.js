@@ -49,7 +49,17 @@ class App extends Component {
   }
 
   render() {
-    return <MessageList messages = {this.state.messages}/>;
+  return (
+    <div className='app-container'>
+      <nav>
+        <img src='logo.png' className='logo' />
+      </nav>
+      <MessageList messages = {this.state.messages}/>
+      <div className='footer'>
+        <img src='footer.png' className='footer-logo' />
+      </div>
+    </div>
+  );
   }
 }
 
