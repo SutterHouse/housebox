@@ -7,5 +7,5 @@ const Message = (props) => (
   </div>
 )
 
-
+Message.displayName = 'Message';
 export default Message;

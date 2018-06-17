@@ -35,4 +35,5 @@ class UserInput extends React.Component {
   }
 }
 
+UserInput.displayName = 'UserInput';
 export default UserInput;

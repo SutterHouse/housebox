@@ -3,6 +3,7 @@ import './style.css';
 import MessageList from './MessageList.js';
 import UserInput from './UserInput.js';
 import axios from 'axios';
+import io from 'socket.io-client';
 
 class App extends Component {
   constructor(props) {
@@ -19,6 +20,10 @@ class App extends Component {
     this.connectToWebSocket();
   }
 
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
   fetchPrevMessages() {
     var url = this.props.httpServer;
     axios.get(url).then(result => {
@@ -28,15 +33,19 @@ class App extends Component {
   }
 
   connectToWebSocket() {
-    var ws = this.props.webSocketServer;
+    var socket = this.props.webSocketServer;
 
-    ws.onopen = () => {
-      ws.onmessage = (e) => {
-        var message 
-        console.log('message received:', e.data);
-        this.setState({messages: this.state.messages.concat(JSON.parse(e.data))});
-      }
-    };
+    socket.on('connect', () => {
+      socket.on('message', (message) => {
+        console.log('message received:', message);
+        this.setState({messages: this.state.messages.concat(JSON.parse(message))});
+      });
+    });
+  }
+
+  scrollToBottom() {
+    var msgs = document.getElementsByClassName('message-list')[0];
+    msgs.scrollTop = msgs.scrollHeight;
   }
 
   sendNewMessage(messageText) {
@@ -70,4 +79,5 @@ class App extends Component {
   }
 }
 
+App.displayName = 'App';
 export default App;

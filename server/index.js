@@ -15,23 +15,18 @@ app.use(express.static('build'));
 
 
 //WEBSOCKET APP
-const server = require('http').createServer();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
-//mount websocket app on http server
-const WebSocket = require('ws');
-const wss = new WebSocket.Server({ server: server });
-
-//mount express app on http server
-server.on('request', app);
-
-wss.on('connection', (ws) => {
-    ws.on('message', message => {
+io.on('connection', (client) => {
+    client.on('message', message => {
         console.log('received message: ', message);
         messageDB.insertMany([JSON.parse(message)]).then(() => {
-            ws.send(message);
+            io.emit('message', message);
         })
     });
-})
+});
+
 
 var port = process.env.PORT || 3001;
 server.listen(port, () => console.log('listening on port', port));

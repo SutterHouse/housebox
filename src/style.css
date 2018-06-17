@@ -33,7 +33,6 @@ nav {
 }
 
 .message-list-container {
-  overflow: scroll;
 
   flex-grow: 1;
   flex-shrink: 1;
@@ -46,6 +45,8 @@ nav {
 .message-list {
   height: 100%;
   width: 75%;
+
+  overflow: scroll;
 }
 
 .message-container {
