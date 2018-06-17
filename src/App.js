@@ -1,23 +1,16 @@
 import React, { Component } from 'react';
 import './style.css';
 import MessageList from './MessageList.js';
+import UserInput from './UserInput.js';
 import axios from 'axios';
-
-let sampleData = [{
-    username: 'testuser1',
-    text: 'hello!'
-  },
-  {
-    username: 'testuser2',
-    text: 'hey?'
-  }
-];
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      messages: []
+      messages: [],
+      username: 'anon',
+      room: 'lobby'
     };
   }
 
@@ -27,7 +20,7 @@ class App extends Component {
   }
 
   fetchPrevMessages() {
-    var url = window.location.origin + '/messages';
+    var url = this.props.httpServer;
     axios.get(url).then(result => {
       console.log(result.data);
       this.setState({ messages: result.data });
@@ -35,18 +28,31 @@ class App extends Component {
   }
 
   connectToWebSocket() {
-    var wsURL = 'ws://' + window.location.host;
-    var ws = new WebSocket(wsURL);
+    var ws = this.props.webSocketServer;
 
     ws.onopen = () => {
       ws.onmessage = (e) => {
-        console.log(e.data);
+        var message 
+        console.log('message received:', e.data);
+        this.setState({messages: this.state.messages.concat(JSON.parse(e.data))});
       }
-  
-      ws.send('client reporting for duty!');
     };
-    
   }
+
+  sendNewMessage(messageText) {
+    var ws = this.props.webSocketServer;
+
+    var message = {
+      username: this.state.username,
+      text: messageText,
+      room: this.state.room
+    };
+
+    console.log('message sending:', messageText);
+    ws.send(JSON.stringify(message));
+  }
+
+
 
   render() {
   return (
@@ -55,6 +61,7 @@ class App extends Component {
         <img src='logo.png' className='logo' />
       </nav>
       <MessageList messages = {this.state.messages}/>
+      <UserInput sendNewMessage={this.sendNewMessage.bind(this)}/>
       <div className='footer'>
         <img src='footer.png' className='footer-logo' />
       </div>

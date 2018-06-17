@@ -27,8 +27,10 @@ server.on('request', app);
 wss.on('connection', (ws) => {
     ws.on('message', message => {
         console.log('received message: ', message);
+        messageDB.insertMany([JSON.parse(message)]).then(() => {
+            ws.send(message);
+        })
     });
-    ws.send('your websocket server is here');
 })
 
 var port = process.env.PORT || 3001;

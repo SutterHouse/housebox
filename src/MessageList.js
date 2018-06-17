@@ -4,15 +4,17 @@ import Message from './Message.js';
 
 const MessageList = (props) => (
 
-  <div className='messageList-container'>
-    {props.messages.map((message, index) =>
-      <div className='message' key={index}>
-        <Message message={message} index={index} />
-      </div>
-    )}
+  <div className='message-list-container'>
+    <div className='message-list'>
+      {props.messages.map((message, index) =>
+          <Message message={message} index={index} />
+      )}
+    </div>
   </div>
 
 )
+
+MessageList.displayName = "MessageList"
 
 
 export default MessageList;
