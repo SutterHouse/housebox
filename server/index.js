@@ -1,4 +1,4 @@
-const messageDB = require('../database/message.js');
+const messageDB = require('../database/mysql.js');
 
 
 //EXPRESS APP
