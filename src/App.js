@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import './style.css';
 import MessageList from './MessageList.js';
 import UserInput from './UserInput.js';
-import axios from 'axios';
-import io from 'socket.io-client';
+import NavBar from './NavBar.js';
+
 
 class App extends Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class App extends Component {
     var url = this.props.httpServer;
     axios.get(url).then(result => {
       console.log(result.data);
-      this.setState({ messages: result.data });
+      this.setState({ messages: result.data }, this.scrollToBottom);
     })
   }
 
@@ -38,14 +39,14 @@ class App extends Component {
     socket.on('connect', () => {
       socket.on('message', (message) => {
         console.log('message received:', message);
-        this.setState({messages: this.state.messages.concat(JSON.parse(message))});
+        this.setState({messages: this.state.messages.concat(JSON.parse(message))}, this.scrollToBottom);
       });
     });
   }
 
   scrollToBottom() {
     var msgs = document.getElementsByClassName('message-list')[0];
-    msgs.scrollTop = msgs.scrollHeight;
+    msgs.scrollTop = msgs.scrollHeight - msgs.clientHeight;
   }
 
   sendNewMessage(messageText) {
@@ -66,9 +67,7 @@ class App extends Component {
   render() {
   return (
     <div className='app-container'>
-      <nav>
-        <img src='logo.png' className='logo' />
-      </nav>
+      <NavBar />
       <MessageList messages = {this.state.messages}/>
       <UserInput sendNewMessage={this.sendNewMessage.bind(this)}/>
       <div className='footer'>
