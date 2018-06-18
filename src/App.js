@@ -21,10 +21,6 @@ class App extends Component {
     this.connectToWebSocket();
   }
 
-  componentDidUpdate() {
-    this.scrollToBottom();
-  }
-
   fetchPrevMessages() {
     var url = this.props.httpServer;
     axios.get(url).then(result => {
@@ -62,12 +58,18 @@ class App extends Component {
     ws.send(JSON.stringify(message));
   }
 
-
+  updateUsername (e) {
+    var username = e.target.value;
+    if (username === '') {
+      username = 'anon';
+    }
+    this.setState({ username });
+  }
 
   render() {
   return (
     <div className='app-container'>
-      <NavBar />
+      <NavBar updateUsername={this.updateUsername.bind(this)}/>
       <MessageList messages = {this.state.messages}/>
       <UserInput sendNewMessage={this.sendNewMessage.bind(this)}/>
       <div className='footer'>
